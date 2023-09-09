@@ -1,16 +1,23 @@
+import { BtnDel, Item, List, Row } from '../Filter/Filter.styled';
+import { AiFillDelete } from 'react-icons/ai';
+import { IconContext } from 'react-icons';
+
 export const ContactList = ({ contacts, handleDelete }) => {
   return (
-    <ul>
-      {contacts.map(itm => (
-        <li key={itm.id}>{itm.name}: {itm.number}
-          <button
-            type='button'
-            onClick={() => handleDelete(itm.id)}
+    <List>
+      {(contacts).map(({ id, name, number }) => (
+        <Item key={id}>
+          <Row>{name}</Row>
+          <Row> {number}</Row>
+          <BtnDel
+            onClick={() => handleDelete(id)}
           >
-            Del
-          </button>
-        </li>
+            <IconContext.Provider value={{ color: 'grey', size: 25 }}>
+            <AiFillDelete/>
+            </IconContext.Provider>
+          </BtnDel>
+        </Item>
       ))}
-    </ul>
+    </List>
   );
 };

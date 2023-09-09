@@ -1,42 +1,81 @@
 import { Component } from 'react';
 import { nanoid } from 'nanoid';
+import  Notiflix  from 'notiflix';
 import contacts from '../data/data.json';
 
 import { ContactForm } from './ContactForm/ContactForm';
 import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
 
+import { Title } from './ContactForm/ContactForm.styled';
+
 export class App extends Component {
   state = {
     contacts,
-    name: '',
+    filter: '',
   };
 
+  handleSubmit = (e) => {
+    e.preventDefault();
 
+    const { name, number } = e.target.elements;
+    const newContacts = {
+      id: nanoid(),
+      name: name.value,
+      number: number.value,
+    };
+
+    if (name.value.trim() === '' || number.value.trim() === '') {
+      return Notiflix.Notify.warning('Please write First name Last name and number');
+    }
+
+    const isDoubleName = this.state.contacts.find(el => el.name === name.value);
+    if (isDoubleName) {
+      return Notiflix.Notify.failure(`${name.value} is already in contacts`);
+    }
+
+    this.setState((prev) => ({
+      contacts: [newContacts, ...prev.contacts],
+    }));
+    e.currentTarget.reset();
+  };
+
+  contactsFilter = ({ target: { value } }) => {
+    this.setState({
+      filter: value,
+    });
+  };
+
+  contactsFilterResult = () => {
+    return this.state.contacts.filter(el => el.name.toLowerCase().includes(this.state.filter.toLowerCase()));
+  };
 
   handleDelete = (id) => {
-    // console.log('1');
     this.setState((prev) => ({
-      contacts: prev.contacts.filter(el => el.id !== id)
+      contacts: prev.contacts.filter(el => el.id !== id),
     }));
   };
 
   render() {
-    console.log(this.state.contacts);
+    // console.log(this.state.filter.length);
+    const contactsFilterResult = this.contactsFilterResult();
+    // console.log(result);
+
     return (
       <>
         <div>
-          <h2>Phonebook</h2>
+          <Title>Phonebook</Title>
           <ContactForm
-            contacts={this.state.contacts}
-            name={this.state.name}
+            handleSubmit={this.handleSubmit}
           />
-
-          <h2>Contacts</h2>
-          <Filter />
+          <Title>Contacts</Title>
+          <Filter
+            contactsFilter={this.contactsFilter}
+            filter={this.state.filter}
+          />
           <ContactList
-            contacts={this.state.contacts}
-            handleDelet={this.handleDelete}
+            contacts={contactsFilterResult}
+            handleDelete={this.handleDelete}
           />
         </div>
       </>

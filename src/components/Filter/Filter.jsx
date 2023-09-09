@@ -1,18 +1,20 @@
-export const Filter = () => {
+import { Label, Input } from '../ContactForm/ContactForm.styled';
+import { Wrap } from './Filter.styled';
+
+export const Filter = ({ contactsFilter, filter }) => {
   return (
-    <>
-      <form>
-        <label>
+    <Wrap>
+        <Label>
           Find contacts by name
-          <input
+          <Input
+            onChange={contactsFilter}
             type="text"
-            // name="name"
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-            title=""
-            required
+            title='Find contacts by name'
+            placeholder='Write name'
+            value={filter}
           />
-        </label>
-      </form>
-    </>
-  )
-}
+        </Label>
+    </Wrap>
+  );
+};

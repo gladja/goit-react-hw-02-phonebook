@@ -1,4 +1,4 @@
-import { BtnDel, Item, List, Row } from '../Filter/Filter.styled';
+import { BtnDel, Item, List, Row } from './ContactList.styled';
 import { AiFillDelete } from 'react-icons/ai';
 import { IconContext } from 'react-icons';
 
